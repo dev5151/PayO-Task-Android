@@ -14,6 +14,7 @@ import com.dev5151.payotask.Adapters.SmsAdapter;
 import com.dev5151.payotask.Models.Sms;
 import com.dev5151.payotask.R;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,7 @@ public class DisplaySmsActivity extends AppCompatActivity {
     Integer income = 0, expense = 0;
     String amtString = null;
     DatabaseReference messageRef;
+    FirebaseAuth mAuth;
 
 
     @Override
@@ -41,6 +43,7 @@ public class DisplaySmsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_sms);
 
         recyclerView = findViewById(R.id.recycler_view);
+        mAuth=FirebaseAuth.getInstance();
         messageRef = FirebaseDatabase.getInstance().getReference().child("sms");
         extendedFloatingActionButton = findViewById(R.id.fab);
         smsArrayList = fetchList();
