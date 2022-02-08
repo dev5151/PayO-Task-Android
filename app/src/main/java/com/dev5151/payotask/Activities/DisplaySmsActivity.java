@@ -31,10 +31,14 @@ public class DisplaySmsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<Sms> smsArrayList;
     ExtendedFloatingActionButton extendedFloatingActionButton;
-    Integer income = 0, expense = 0;
+    Double income = 0.0, expense = 0.0;
     String amtString = null;
     DatabaseReference messageRef;
     FirebaseAuth mAuth;
+    Pattern p = Pattern.compile("Rs\\.[1-9][0-9]+");
+    Pattern p1 = Pattern.compile("Rs\\.\\s[1-9][0-9]+\\.[0-9]+");
+    Pattern p2 = Pattern.compile("INR\\s[1-9][0-9]+\\.[0-9]+");
+    Pattern p3 = Pattern.compile("INR\\s[1-9][0-9]+");
 
 
     @Override
@@ -43,7 +47,7 @@ public class DisplaySmsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_sms);
 
         recyclerView = findViewById(R.id.recycler_view);
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         messageRef = FirebaseDatabase.getInstance().getReference().child("sms");
         extendedFloatingActionButton = findViewById(R.id.fab);
         smsArrayList = fetchList();
@@ -73,31 +77,57 @@ public class DisplaySmsActivity extends AppCompatActivity {
 
         for (Sms sms : smsList) {
             String body = sms.getMsg();
+            Log.i("test", body);
             if (body.toLowerCase().contains("debited") || body.toLowerCase().contains("spent")) {
-                Pattern p = Pattern.compile("Rs.\\s[0-9]+");
-                Pattern p1 = Pattern.compile("Rs.\\s[0-9]+.00");
-                Matcher m = p.matcher(body);
-                if (m.find()) {
-                    amtString = m.group(0);
-                    expense = expense + Integer.parseInt(amtString.substring(4));
+                Log.i("test", "debit");
+
+                Matcher m1 = p.matcher(body);
+                Matcher m2 = p1.matcher(body);
+                Matcher m3 = p2.matcher(body);
+                Matcher m4 = p3.matcher(body);
+
+                if (m1.find()) {
+                    Log.i("test", "debit match found");
+                    amtString = m1.group(0);
+                    expense = expense + Double.parseDouble(amtString.substring(3));
+                } else if (m2.find()) {
+                    Log.i("test", "debit match found");
+                    amtString = m2.group(0);
+                    expense = expense + Double.parseDouble(amtString.substring(3));
+                } else if (m3.find()) {
+                    Log.i("test", "debit match found");
+                    amtString = m3.group(0);
+                    expense = expense + Double.parseDouble(amtString.substring(3));
+                } else if (m3.find()) {
+                    Log.i("test", "debit match found");
+                    amtString = m4.group(0);
+                    expense = expense + Double.parseDouble(amtString.substring(3));
                 }
-                Matcher matcher = p1.matcher(body);
-                if (matcher.find()) {
-                    amtString = m.group(0);
-                    expense = expense + Integer.parseInt(amtString.substring(4));
-                }
+
             } else if (body.toLowerCase().contains("credited")) {
-                Pattern p = Pattern.compile("Rs.\\s[0-9]+");
-                Pattern p1 = Pattern.compile("Rs.\\s[0-9]+.00");
-                Matcher m = p.matcher(body);
-                if (m.find()) {
-                    amtString = m.group(0);
-                    income = income + Integer.parseInt(amtString.substring(4));
-                }
-                Matcher matcher = p1.matcher(body);
-                if (matcher.find()) {
-                    amtString = m.group(0);
-                    income = income + Integer.parseInt(amtString.substring(4));
+                Log.i("test", "credit");
+
+                Matcher m1 = p.matcher(body);
+                Matcher m2 = p1.matcher(body);
+                Matcher m3 = p2.matcher(body);
+                Matcher m4 = p3.matcher(body);
+
+                if (m1.find()) {
+                    Log.i("test", "credit match found");
+                    amtString = m1.group(0);
+                    income = income + Double.parseDouble(amtString.substring(3));
+                } else if (m2.find()) {
+                    Log.i("test", "credit match found");
+                    amtString = m2.group(0);
+                    income = income + Double.parseDouble(amtString.substring(3));
+                } else if (m3.find()) {
+                    Log.i("test", "credit match found");
+                    amtString = m3.group(0);
+                    income = income + Double.parseDouble(amtString.substring(3));
+                } else if (m4.find()) {
+                    Log.i("test", "credit match found");
+                    amtString = m4.group(0);
+                    income = income + Double.parseDouble(amtString.substring(3));
                 }
             }
         }

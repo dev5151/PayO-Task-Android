@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class StatsActivity extends AppCompatActivity {
 
     private PieChart pieChart;
-    Integer expense = 0, income = 0;
+    Double expense = 0.0, income = 0.0;
     int[] colorArray;
 
 
@@ -29,8 +29,8 @@ public class StatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stats);
 
         Intent intent=getIntent();
-        expense=intent.getIntExtra("expense",0);
-        income=intent.getIntExtra("income",0);
+        expense=intent.getDoubleExtra("expense",0);
+        income=intent.getDoubleExtra("income",0);
 
         pieChart = findViewById(R.id.pie_chart);
         colorArray = new int[]{Color.RED, Color.GREEN};
@@ -38,7 +38,7 @@ public class StatsActivity extends AppCompatActivity {
         setData(expense,income);
     }
 
-    private void setData(Integer expense, Integer income) {
+    private void setData(Double expense, Double income) {
         PieDataSet pieDataSet = new PieDataSet(dataValues(expense, income), "");
         pieDataSet.setColors(colorArray);
         PieData pieData = new PieData(pieDataSet);
@@ -58,10 +58,10 @@ public class StatsActivity extends AppCompatActivity {
         pieChart.invalidate();
     }
 
-    private ArrayList<PieEntry> dataValues(Integer expense, Integer income) {
+    private ArrayList<PieEntry> dataValues(Double expense, Double income) {
         ArrayList<PieEntry> dataVals = new ArrayList<>();
-        dataVals.add(new PieEntry(expense, "Total Expense"));
-        dataVals.add(new PieEntry(income,"Total Income"));
+        dataVals.add(new PieEntry(expense.floatValue(), "Total Expense"));
+        dataVals.add(new PieEntry(income.floatValue(),"Total Income"));
         return dataVals;
     }
 }
